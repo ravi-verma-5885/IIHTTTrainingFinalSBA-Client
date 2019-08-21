@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserComponent } from './user/user.component';
-import {AddUserComponent} from './user/add-user.component';
+import { AddProjectComponent } from './projects/add-project.component';
+//import { AddTaskComponent } from './user/user.component';
+import { AddUserComponent} from './user/add-user.component';
+//import { ViewTaskComponent } from './user/user.component';
 
 const routes: Routes = [
-  { path: 'users', component: UserComponent },
-  { path: 'add', component: AddUserComponent }
+  { path: 'projects', component: AddProjectComponent },
+  //{ path: 'addTasks', component: AddTaskComponent },
+  { path: 'users', component: AddUserComponent }
+  //{ path: 'viewTasks', component: ViewTaskComponent }
 ];
 
 @NgModule({

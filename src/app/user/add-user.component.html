@@ -2,7 +2,7 @@
 <div class="col-md-3"></div>
 <div class="col-md-6">
  <h3>Add User</h3> <br>
-<form role="form" (submit)="createUser()">
+<form role="form">
   <div class="form-group">
     <label for="firstName">First Name:</label>
     <input [(ngModel)]="user.firstName" placeholder="First Name" name="firstName" required="required" class="form-control" id="firstName">
@@ -16,10 +16,12 @@
     <label for="lastName">Employee Id:</label>
    <input [(ngModel)]="user.employeeId" placeholder="Employee Id" name="employeeId" required="required" class="form-control" id="employeeId">
   </div>
-
-  <!-- <button class="btn btn-success" (click)="createUser()">Add User</button> -->
   
-  <input type="submit" class="btn btn-primary" value="Add User" /> 
+  <input [(ngModel)]="user.userId" name="userId" required="required" class="form-control hidden" id="userId">
+
+  <button class="btn btn-success" *ngIf="!user.userId" id="addUserBtnId" (click)="createUser()">Add User</button>
+  
+  <button class="btn btn-success" *ngIf="user.userId" id="updateUserBtnId" (click)="updateUser(user)">Update User</button>
   
   <input type="reset" class="btn btn-info margin-left-20" value="Reset" />
 </form>
@@ -27,10 +29,28 @@
 <div class="col-md-3"></div>
 </div>
 <hr>
+
+<div class="row form-group">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<div class="form-group">
+		<label for="firstName">Search</label>
+    	<input [(ngModel)]="searchUser" placeholder="Search by First Name" name="searchUser" required="required" class="form-control" id="searchUser">
+    	</div>
+		<button class="btn btn-primary col-md-2" (click)="getUserByFirstName(searchUser)">Search</button>
+		
+		<label for="firstName" class="col-md-4" style="text-align: right;">Sort By:</label>
+		
+		<button class="btn btn-link col-md-2" (click)="sortListByParameter('firstName')">First Name</button>
+		<button class="btn btn-link col-md-2" (click)="sortListByParameter('lastName')">Last Name</button>
+		<button class="btn btn-link col-md-2" (click)="sortListByParameter('employeeId')">Employee Id</button>
+	</div>
+	<div class="col-md-3"></div>
+</div>
 <div class="row form-group">
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<h3> View User</h3>
+<h3> View Users</h3>
 
 <table class="table table-striped">
   <thead>
@@ -48,7 +68,7 @@
     <td>{{user.firstName}}</td>
     <td>{{user.lastName}}</td>
     <td>{{user.employeeId}}</td>
-    <td><button class="btn btn-info" (click)="getUserById(user)"> Edit</button>
+    <td><button class="btn btn-info" id="editUserBtnId" (click)="editUserById(user)"> Edit</button>
     	<button class="btn btn-danger margin-left-20" (click)="deleteUser(user)"> Delete</button></td>
   </tr>
   </tbody>
