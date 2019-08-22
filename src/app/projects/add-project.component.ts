@@ -1,16 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-//import { User } from '../models/user.model';
+import { User } from '../models/user.model';
 import { Project } from '../models/project.model';
 import { ProjectService } from './project.service';
+
+import { UserService } from '../user/user.service';
+
+import { ModalService } from './_modal';
+
+declare var $: any;
 
 @Component({
   templateUrl: './add-project.component.html'
 })
 export class AddProjectComponent implements OnInit {
         
-  constructor(private router: Router, private projectService: ProjectService) {
+  constructor(private router: Router, private projectService: ProjectService, private modalService: ModalService, private userService: UserService) {
     
   }
     
@@ -19,7 +25,7 @@ export class AddProjectComponent implements OnInit {
         this.isDisabled = !this.isDisabled;
         return;
     }
-  
+  users: User[];
   projects: Project[];
   ngOnInit() {
     this.projectService.getProjects()
@@ -74,7 +80,6 @@ export class AddProjectComponent implements OnInit {
         })
       });
     
-    
   };
     
   sortListByParameter(param: string): void {
@@ -89,4 +94,32 @@ export class AddProjectComponent implements OnInit {
     
   };
     
+    openModal(id: string) {
+        this.userService.getUsers()
+          .subscribe( data => {
+            this.users = data;
+          });
+        this.modalService.open(id);
+    };
+
+    closeModal(id: string) {
+        this.modalService.close(id);
+    };
+    
+    selectUser(id: string, user: User) {
+        this.modalService.close(id);
+    };
+    
+   getUserByFirstName(firstName: string): void {
+    
+    this.userService.getUsers()
+      .subscribe( data => {
+        this.users = data;
+        this.users.forEach((t, i) => {
+          if (t.firstName === firstName) { this.users = this.users.filter(u => u == t); }
+        })
+      });
+    
+    
+  };
 }
