@@ -1,45 +1,29 @@
-<div class="row form-group">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
-		<h3>Add User</h3>
-		<br>
-		<form role="form">
-			<div class="form-group">
-				<label for="firstName">First Name:</label> <input
-					[(ngModel)]="user.firstName" placeholder="First Name"
-					name="firstName" required="required" class="form-control"
-					id="firstName">
-			</div>
-			<div class="form-group">
-				<label for="lastName">Last Name:</label> <input
-					[(ngModel)]="user.lastName" placeholder="Last name" name="lastName"
-					required="required" class="form-control" id="lastName">
-			</div>
+<div class="col-md-6">
+<h2> User Details</h2>
 
-			<div class="form-group">
-				<label for="lastName">Employee Id:</label> <input
-					[(ngModel)]="user.employeeId" placeholder="Employee Id"
-					name="employeeId" required="required" class="form-control"
-					id="employeeId">
-			</div>
-
-			<input [(ngModel)]="user.userId" name="userId" required="required"
-				class="form-control hidden" id="userId">
-
-			<button class="btn btn-success" *ngIf="!user.userId"
-				id="addUserBtnId" (click)="createUser()">Add User</button>
-
-			<button class="btn btn-success" *ngIf="user.userId"
-				id="updateUserBtnId" (click)="updateUser(user)">Update User</button>
-
-			<input type="reset" class="btn btn-info margin-left-20" value="Reset" />
-		</form>
-	</div>
-	<div class="col-md-3"></div>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th class="hidden">Id</th>
+    <th>FirstName</th>
+    <th>LastName</th>
+    <th>Employee Id</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let user of users">
+    <td class="hidden">{{user.userId}}</td>
+    <td>{{user.firstName}}</td>
+    <td>{{user.lastName}}</td>
+    <td>{{user.employeeId}}</td>
+    <td><button class="btn btn-danger" (click)="deleteUser(user)"> Delete User</button></td>
+  </tr>
+  </tbody>
+</table>
 </div>
-<hr>
 
-<div class="row form-group">
+<!-- <div class="row form-group">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
 		<div class="form-group">
@@ -92,4 +76,4 @@
 		</table>
 	</div>
 	<div class="col-md-3"></div>
-</div>
+</div> -->

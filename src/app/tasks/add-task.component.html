@@ -1,0 +1,42 @@
+<div class="row form-group">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<h3>Add Task</h3>
+		<br>
+		<form role="form">
+			<div class="form-group">
+				<label for="firstName">First Name:</label> <input
+					[(ngModel)]="user.firstName" placeholder="First Name"
+					name="firstName" required="required" class="form-control"
+					id="firstName">
+			</div>
+			<div class="form-group">
+				<label for="lastName">Last Name:</label> <input
+					[(ngModel)]="user.lastName" placeholder="Last name" name="lastName"
+					required="required" class="form-control" id="lastName">
+			</div>
+
+			<div class="form-group">
+				<label for="lastName">Employee Id:</label> <input
+					[(ngModel)]="user.employeeId" placeholder="Employee Id"
+					name="employeeId" required="required" class="form-control"
+					id="employeeId">
+			</div>
+
+			<input [(ngModel)]="user.userId" name="userId" required="required"
+				class="form-control hidden" id="userId">
+
+			<button class="btn btn-success" *ngIf="!user.userId"
+				id="addUserBtnId" (click)="createUser()">Add Task</button>
+
+			<button class="btn btn-success" *ngIf="user.userId"
+				id="updateUserBtnId" (click)="updateUser(user)">Update Task</button>
+
+			<input type="reset" class="btn btn-info margin-left-20" value="Reset" />
+		</form>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+<hr>
+
+
