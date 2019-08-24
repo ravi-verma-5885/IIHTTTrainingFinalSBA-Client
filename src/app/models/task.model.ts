@@ -1,5 +1,6 @@
 import { User } from '../models/user.model';
 import { Project } from '../models/project.model';
+import { ParentTask } from '../models/parentTask.model';
 
 export class Task {
   taskId: number;
@@ -10,5 +11,5 @@ export class Task {
   status: any;
   user: User;
   project: Project;
-    
+  parentTask: ParentTask;
 }

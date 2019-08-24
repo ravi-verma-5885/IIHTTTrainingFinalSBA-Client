@@ -84,7 +84,7 @@ export class AddProjectComponent implements OnInit {
             })
     };
 
-    getProjectByFirstName(projectName: string): void {
+    getProjectByName(projectName: string): void {
         this.projectService.getProjects()
             .subscribe(data => {
                 this.projects = data;

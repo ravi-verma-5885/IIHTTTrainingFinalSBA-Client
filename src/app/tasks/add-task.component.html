@@ -4,39 +4,250 @@
 		<h3>Add Task</h3>
 		<br>
 		<form role="form">
-			<div class="form-group">
-				<label for="firstName">First Name:</label> <input
-					[(ngModel)]="user.firstName" placeholder="First Name"
-					name="firstName" required="required" class="form-control"
-					id="firstName">
+			<div class="form-group row">
+				<div class="col-md-10">
+					<label for="projectName">Project:</label> <input
+						[(ngModel)]="selProjectName" [disabled]="true"
+						placeholder="Project Name" name="selProjectName"
+						required="required" class="form-control" id="selProjectName">
+					<input [(ngModel)]="task.project" name="taskProject"
+						required="required" class="form-control hidden" id="taskProject">
+				</div>
+				<div class="col-md-2">
+					<br>
+					<button class="btn btn-primary"
+						(click)="openModal('project-modal')">Search Project</button>
+				</div>
 			</div>
 			<div class="form-group">
-				<label for="lastName">Last Name:</label> <input
-					[(ngModel)]="user.lastName" placeholder="Last name" name="lastName"
-					required="required" class="form-control" id="lastName">
+				<label for="taskName">Task:</label> <input
+					[(ngModel)]="task.taskName" placeholder="Task Description"
+					name="taskName" required="required" class="form-control"
+					id="taskName">
 			</div>
-
 			<div class="form-group">
-				<label for="lastName">Employee Id:</label> <input
-					[(ngModel)]="user.employeeId" placeholder="Employee Id"
-					name="employeeId" required="required" class="form-control"
-					id="employeeId">
+				<input [(ngModel)]="parentTaskCheckbox" name="parentTaskCheckboxId" (change)="toggleDisableForParentTask()"
+					type="checkbox" id="parentTaskCheckboxId"/> <label for="parentTaskCheckboxId"
+					class="margin-left-20">Parent Task</label>
+			</div>
+			<div class="form-group">
+				<label for="taskPriority">Priority:</label> <input type="range"
+					[(ngModel)]="task.priority" min="0" max="30" name="taskPriority" [disabled]="isDisabledForParentTask"
+					class="form-control" id="taskPriority">
+			</div>
+			<div class="form-group row">
+				<div class="col-md-10">
+					<label for="parentTaskName">Parent Task:</label> <input
+						[(ngModel)]="selParentTaskName" [disabled]="true"
+						placeholder="Parent Task Description" name="selParentTaskName"
+						required="required" class="form-control" id="selParentTaskName">
+					<input [(ngModel)]="task.project" name="taskProject"
+						required="required" class="form-control hidden" id="taskProject">
+				</div>
+				<div class="col-md-2">
+					<br>
+					<button class="btn btn-primary" [disabled]="isDisabledForParentTask"
+						(click)="openModal('parent-task-modal')">Search Task</button>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-6">
+					<label for="startDate">Start Date:</label> <input
+						type='date' name="startDate" class="form-control" [disabled]="isDisabledForParentTask"
+						#myDate [(ngModel)]="task.startDate" />
+				</div>
+				<div class="col-md-6">
+					<label for="endDate">End Date:</label> <input
+						type='date' name="endDate" class="form-control" [disabled]="isDisabledForParentTask"
+						#myDate [(ngModel)]="task.endDate" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-md-10">
+					<label for="firstName">User:</label> <input
+						[(ngModel)]="userFirstName" [disabled]="true"
+						placeholder="User Name" name="userFirstName"
+						required="required" class="form-control" id="userFirstName">
+					<input [(ngModel)]="task.user" name="taskUser"
+						required="required" class="form-control hidden" id="taskUser">
+				</div>
+				<div class="col-md-2">
+					<br>
+					<button class="btn btn-primary" [disabled]="isDisabledForParentTask"
+						(click)="openModal('user-modal')">Search User</button>
+				</div>
 			</div>
 
-			<input [(ngModel)]="user.userId" name="userId" required="required"
-				class="form-control hidden" id="userId">
+			<input [(ngModel)]="task.taskId" name="taskId" required="required"
+				class="form-control hidden" id="taskId">
 
-			<button class="btn btn-success" *ngIf="!user.userId"
-				id="addUserBtnId" (click)="createUser()">Add Task</button>
+			<button class="btn btn-success" *ngIf="!task.taskId"
+				id="addTaskBtnId" (click)="createTask()">Add Task</button>
 
-			<button class="btn btn-success" *ngIf="user.userId"
-				id="updateUserBtnId" (click)="updateUser(user)">Update Task</button>
+			<button class="btn btn-success" *ngIf="task.taskId"
+				id="updateTaskBtnId" (click)="updateTask(task)">Update Task</button>
 
-			<input type="reset" class="btn btn-info margin-left-20" value="Reset" />
+			<input type="reset" class="btn btn-info margin-left-20" value="Reset" (click)="callReset()"/>
 		</form>
 	</div>
 	<div class="col-md-3"></div>
 </div>
+
+<jw-modal id="project-modal">
+	<div class="row form-group">
+		<div class="col-md-12">
+			<h3>Select Project</h3>
+			<br>
+			<div class="form-group">
+				<div class="col-md-6">
+					<input [(ngModel)]="searchProject"
+						placeholder="Search by Project Name" name="searchProject"
+						required="required" class="form-control" id="searchProject">
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary"
+						(click)="getProjectByName(searchProject)">Search</button>
+				</div>
+			</div>
+			<br>
+		</div>
+	</div>
+	<div class="row form-group">
+		<div class="col-md-12">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="hidden">Id</th>
+						<th>Project Name</th>
+						<th>Priority</th>
+						<th>Start Date</th>
+						<th>End Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let projectFrmList of projects">
+						<td class="hidden">{{projectFrmList.projectId}}</td>
+						<td>{{projectFrmList.projectName}}</td>
+						<td>{{projectFrmList.priority}}</td>
+						<td>{{projectFrmList.startDate}}</td>
+						<td>{{projectFrmList.endDate}}</td>
+						<td><button class="btn btn-info" id="selectProjectBtnId"
+								(click)="selectProject('project-modal', projectFrmList)">
+								Select</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div align="center">
+		<button class="btn btn-primary"
+			(click)="closeModal('project-modal');">Close</button>
+	</div>
+</jw-modal>
+
+<jw-modal id="user-modal">
+	<div class="row form-group">
+		<div class="col-md-12">
+			<h3>Select User</h3>
+			<br>
+			<div class="form-group">
+				<div class="col-md-6">
+					<input [(ngModel)]="searchUser"
+						placeholder="Search by First Name" name="searchUser"
+						required="required" class="form-control" id="searchUser">
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary"
+						(click)="getUserByFirstName(searchUser)">Search</button>
+				</div>
+			</div>
+			<br>
+		</div>
+	</div>
+	<div class="row form-group">
+		<div class="col-md-12">
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="hidden">Id</th>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Employee Id</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let userFrmList of users">
+						<td class="hidden">{{userFrmList.userId}}</td>
+						<td>{{userFrmList.firstName}}</td>
+						<td>{{userFrmList.lastName}}</td>
+						<td>{{userFrmList.employeeId}}</td>
+						<td><button class="btn btn-info" id="editUserBtnId"
+								(click)="selectUser('user-modal', userFrmList)">
+								Select</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div align="center">
+		<button class="btn btn-primary"
+			(click)="closeModal('user-modal');">Close</button>
+	</div>
+</jw-modal>
+
+
+<jw-modal id="parent-task-modal">
+	<div class="row form-group">
+		<div class="col-md-12">
+			<h3>Select Parent Task</h3>
+			<br>
+			<div class="form-group">
+				<div class="col-md-6">
+					<input [(ngModel)]="searchParentTask"
+						placeholder="Search by Parent Task" name="searchParentTask"
+						required="required" class="form-control" id="searchParentTask">
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary"
+						(click)="getParentTaskByName(searchParentTask)">Search</button>
+				</div>
+			</div>
+			<br>
+		</div>
+	</div>
+	<div class="row form-group">
+		<div class="col-md-12">
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="hidden">Id</th>
+						<th>Parent Task</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let parentTaskFrmList of parentTasks">
+						<td class="hidden">{{parentTaskFrmList.parentId}}</td>
+						<td>{{parentTaskFrmList.parentTask}}</td>
+						<td><button class="btn btn-info" id="selectParentTaskBtnId"
+								(click)="selectParentTask('parent-task-modal', parentTaskFrmList)">
+								Select</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div align="center">
+		<button class="btn btn-primary"
+			(click)="closeModal('parent-task-modal');">Close</button>
+	</div>
+</jw-modal>
+
+
 <hr>
 
 

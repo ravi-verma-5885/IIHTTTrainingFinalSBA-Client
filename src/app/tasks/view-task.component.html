@@ -1,79 +1,80 @@
-<div class="col-md-6">
-<h2> User Details</h2>
-
-<table class="table table-striped">
-  <thead>
-  <tr>
-    <th class="hidden">Id</th>
-    <th>FirstName</th>
-    <th>LastName</th>
-    <th>Employee Id</th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let user of users">
-    <td class="hidden">{{user.userId}}</td>
-    <td>{{user.firstName}}</td>
-    <td>{{user.lastName}}</td>
-    <td>{{user.employeeId}}</td>
-    <td><button class="btn btn-danger" (click)="deleteUser(user)"> Delete User</button></td>
-  </tr>
-  </tbody>
-</table>
-</div>
-
-<!-- <div class="row form-group">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
-		<div class="form-group">
-			<label for="firstName">Search</label> <input [(ngModel)]="searchUser"
-				placeholder="Search by First Name" name="searchUser"
-				required="required" class="form-control" id="searchUser">
-		</div>
-		<button class="btn btn-primary col-md-2"
-			(click)="getUserByFirstName(searchUser)">Search</button>
-
-		<label for="firstName" class="col-md-4" style="text-align: right;">Sort
-			By:</label>
-
-		<button class="btn btn-link col-md-2"
-			(click)="sortListByParameter('firstName')">First Name</button>
-		<button class="btn btn-link col-md-2"
-			(click)="sortListByParameter('lastName')">Last Name</button>
-		<button class="btn btn-link col-md-2"
-			(click)="sortListByParameter('employeeId')">Employee Id</button>
-	</div>
-	<div class="col-md-3"></div>
-</div>
 <div class="row form-group">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
-		<h3>View Users</h3>
-
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th class="hidden">Id</th>
-					<th>First Name</th>
-					<th>Last Name</th>
-					<th>Employee Id</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let user of users">
-					<td class="hidden">{{user.userId}}</td>
-					<td>{{user.firstName}}</td>
-					<td>{{user.lastName}}</td>
-					<td>{{user.employeeId}}</td>
-					<td><button class="btn btn-info" id="editUserBtnId"
-							(click)="editUserById(user)">Edit</button>
-						<button class="btn btn-danger margin-left-20"
-							(click)="deleteUser(user)">Delete</button></td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<div>
+			<h3>View Tasks</h3>
+			<br>
+			<div class="form-group row">
+				<div class="col-md-1">
+					<label for="firstName">Project: </label> 
+				</div>
+				<div class="col-md-3">
+					<input [(ngModel)]="searchProject"
+						placeholder="Search by Project Name" name="searchProject"
+						required="required" class="form-control" id="searchProject">
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-primary"
+						(click)="getProjectByName(searchProject)">Search</button>
+				</div>
+				<div class="col-md-6">
+					<label for="firstName" class="text-right">Sort Task:</label>
+					<button class="btn btn-link"
+						(click)="sortListByParameter('startDate')">Start Date</button>
+					<button class="btn btn-link"
+						(click)="sortListByParameter('endDate')">End Date</button>
+					<button class="btn btn-link"
+						(click)="sortListByParameter('priority')">Priority</button>
+					<button class="btn btn-link"
+						(click)="sortListByParameter('completed')">Completed</button>
+				</div>
+			</div>
+		</div>
+		
+		<div *ngFor="let taskFrmList of tasks">
+			<hr class="dotted-hr-line">
+			<span class="hidden">{{taskFrmList.taskId}}</span>
+			<div class="row form-group">
+				<div class="col-sm-10">
+					<div class="row form-group">
+						<div class="col-sm-2">
+							<div>
+								<strong>Task Name</strong> {{taskFrmList.taskName}}
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div>
+								<strong>Parent Task</strong> {{taskFrmList.parentTask.parentTask}}
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div>
+								<strong>Priority</strong> {{taskFrmList.priority}}
+								<strong>Status </strong>{{taskFrmList.status}}
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div>
+								<strong>Start Date</strong> {{taskFrmList.startDate}}
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div>
+								<strong>End Date </strong>{{taskFrmList.endDate}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div>
+						<button class="btn btn-info" id="editProjectBtnId"
+							(click)="editProjectById(project)">Edit</button>
+					</div>
+					<button class="btn btn-danger" (click)="updateTaskCompleted(taskFrmList, 'Completed')">
+						End Task</button>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div class="col-md-3"></div>
-</div> -->
+	<div class="col-md-2"></div>
+</div>

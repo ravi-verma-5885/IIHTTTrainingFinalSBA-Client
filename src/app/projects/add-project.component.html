@@ -130,7 +130,7 @@
 				id="searchProject">
 		</div>
 		<button class="btn btn-primary col-md-2"
-			(click)="getProjectByFirstName(searchProject)">Search</button>
+			(click)="getProjectByName(searchProject)">Search</button>
 
 		<label for="firstName" class="col-md-2" style="text-align: right;">Sort
 			By:</label>
@@ -168,7 +168,7 @@
 							<div class="row form-group">
 								<div class="col-sm-6">
 									<div>
-										<strong>No of Tasks</strong> {{project.priority}}
+										<strong>No of Tasks</strong> {{project.tasks.length}}
 									</div>
 									<div>
 										<strong>Start Date</strong> {{project.startDate}}
