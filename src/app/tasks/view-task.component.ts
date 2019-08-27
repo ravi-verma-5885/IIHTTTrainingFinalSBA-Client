@@ -62,7 +62,6 @@ export class ViewTaskComponent implements OnInit {
     
     updateTaskCompleted(task: Task, status: string): void {
         task.status = status;
-        task.project = this.projects[0];
         this.taskService.updateTask(task)
             .subscribe(data => {
                 alert('Task updated successfully with status complete.');
