@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { ProjectService } from '../projects/project.service';
 import { TaskService } from './task.service';
 import { ParentTaskService } from './parentTask.service';
+import { EditTaskService } from './edit-task.service';
 
 import { ModalService } from '../_modal';
 
@@ -23,7 +24,8 @@ export class AddTaskComponent implements OnInit {
         private projectService: ProjectService,
         private modalService: ModalService,
         private taskService: TaskService,
-        private parentTaskService: ParentTaskService) {
+        private parentTaskService: ParentTaskService,
+        private editTaskService: EditTaskService) {
 
     }
 
@@ -32,14 +34,23 @@ export class AddTaskComponent implements OnInit {
     tasks: Task[];
     parentTasks: ParentTask [];
     
-    ngOnInit() {
-        
-    };
-    
     userFirstName: string;
     selProjectName: string;
     selParentTaskName: string;
     parentTaskCheckbox: boolean;
+    searchProjectToAddTask:any;
+    isDisabledOnEdit = false;
+    
+    ngOnInit() {
+        if(this.editTaskService.task != null){
+            this.task = this.editTaskService.task;
+            this.userFirstName = this.task.user.firstName + ' ' + this.editTaskService.task.user.lastName;
+            this.selParentTaskName = this.task.parentTask.parentTask;
+            this.selProjectName = this.editTaskService.project.projectName;
+            this.task.project = this.editTaskService.project;
+            this.isDisabledOnEdit = true;
+        }
+    };
     
     task: Task = new Task();
     parentTask: ParentTask;
@@ -63,6 +74,19 @@ export class AddTaskComponent implements OnInit {
          }
     };
     
+    updateTask(task: Task): void {
+        this.taskService.createTask(task)
+            .subscribe(data => {
+                this.clearForm();
+                this.task = new Task();
+                this.selProjectName = null;
+                this.selParentTaskName = null;
+                this.userFirstName = null;
+                this.isDisabledOnEdit = false;
+                alert('Task updated successfully.');
+            });
+    };
+    
     clearForm() {
         this.task = new Task();
         this.selProjectName = null;
@@ -70,17 +94,6 @@ export class AddTaskComponent implements OnInit {
         this.userFirstName = null;
         this.callReset();
         this.parentTaskCheckbox = false;
-    };
-
-    updateTask(task: Task): void {
-        this.taskService.updateTask(task)
-            .subscribe(data => {
-                this.task = new Task();
-                this.selProjectName = null;
-                this.selParentTaskName = null;
-                this.userFirstName = null;
-                alert('Task updated successfully.');
-            })
     };
 
     getProjectByName(projectName: string): void {

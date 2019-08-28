@@ -9,13 +9,13 @@
 					<label for="firstName">Project: </label> 
 				</div>
 				<div class="col-md-3">
-					<input [(ngModel)]="searchProject"
+					<input [(ngModel)]="searchProject" [disabled]="true"
 						placeholder="Search by Project Name" name="searchProject"
 						required="required" class="form-control" id="searchProject">
 				</div>
 				<div class="col-md-2">
 					<button class="btn btn-primary"
-						(click)="getProjectByName(searchProject)">Search</button>
+						(click)="openModal('project-modal')">Search Project</button>
 				</div>
 				<div class="col-md-6">
 					<label for="firstName" class="text-right">Sort Task:</label>
@@ -30,6 +30,59 @@
 				</div>
 			</div>
 		</div>
+		
+		<jw-modal id="project-modal">
+			<div class="row form-group">
+				<div class="col-md-12">
+					<h3>Select Project</h3>
+					<br>
+					<div class="form-group">
+						<div class="col-md-6">
+							<input [(ngModel)]="searchProjectFrmPopUp"
+								placeholder="Search by Project Name" name="searchProjectFrmPopUp"
+								required="required" class="form-control" id="searchProjectFrmPopUp">
+						</div>
+						<div class="col-md-2">
+							<button class="btn btn-primary"
+								(click)="getProjectList(searchProjectFrmPopUp)">Search</button>
+						</div>
+					</div>
+					<br>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-12">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th class="hidden">Id</th>
+								<th>Project Name</th>
+								<th>Priority</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let projectFrmList of projects">
+								<td class="hidden">{{projectFrmList.projectId}}</td>
+								<td>{{projectFrmList.projectName}}</td>
+								<td>{{projectFrmList.priority}}</td>
+								<td>{{projectFrmList.startDate}}</td>
+								<td>{{projectFrmList.endDate}}</td>
+								<td><button class="btn btn-info" id="selectProjectBtnId"
+										(click)="selectProject('project-modal', projectFrmList)">
+										Select</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div align="center">
+				<button class="btn btn-primary"
+					(click)="closeModal('project-modal');">Close</button>
+			</div>
+		</jw-modal>
 		
 		<div *ngFor="let taskFrmList of tasks">
 			<hr class="dotted-hr-line">
@@ -68,7 +121,7 @@
 				<div class="col-sm-2">
 					<div>
 						<button class="btn btn-info" id="editProjectBtnId"
-							(click)="editProjectById(project)">Edit</button>
+							(click)="editTask(taskFrmList)">Edit</button> <!-- [routerLink]="['/addTasks']" -->
 					</div>
 					<button class="btn btn-danger" (click)="updateTaskCompleted(taskFrmList, 'Completed')">
 						End Task</button>

@@ -10,6 +10,7 @@ import { ModalModule } from './_modal';
 import {UserService} from './user/user.service';
 import {ProjectService} from './projects/project.service';
 import {TaskService} from './tasks/task.service';
+import {EditTaskService} from './tasks/edit-task.service';
 import {ParentTaskService} from './tasks/parentTask.service';
 import {HttpClientModule} from "@angular/common/http";
 import {AddProjectComponent} from './projects/add-project.component';
@@ -32,7 +33,7 @@ import {ViewTaskComponent} from './tasks/view-task.component';
     FormsModule,
     ModalModule
   ],
-  providers: [UserService, ProjectService, TaskService, ParentTaskService],
+  providers: [UserService, ProjectService, TaskService, ParentTaskService, EditTaskService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

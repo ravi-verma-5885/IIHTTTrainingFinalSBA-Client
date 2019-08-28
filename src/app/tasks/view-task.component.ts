@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { ProjectService } from '../projects/project.service';
 import { TaskService } from './task.service';
 import { ParentTaskService } from './parentTask.service';
+import { EditTaskService } from './edit-task.service';
 
 import { ModalService } from '../_modal';
 
@@ -22,14 +23,15 @@ export class ViewTaskComponent implements OnInit {
         private userService: UserService,
         private projectService: ProjectService,
         private modalService: ModalService,
-        private taskService: TaskService) {
+        private taskService: TaskService,
+        private editTaskService: EditTaskService) {
 
     }
 
     users: User[];
     projects: Project[];
     tasks: Task[];
-
+    selectedProject: Project;
     ngOnInit() {
         
     };
@@ -72,6 +74,46 @@ export class ViewTaskComponent implements OnInit {
                 });
         })
     };
+    searchProjectFrmPopUp: string;
+    openModal(id: string) {
+        this.searchProjectFrmPopUp = null;
+        if (id === "project-modal"){
+            this.projectService.getProjects()
+                .subscribe(data => {
+                    this.projects = data;
+                });
+        } 
+        this.modalService.open(id);
+    };
     
+    closeModal(id: string) {
+        this.modalService.close(id);
+    };
+    
+    searchProject: string;
+    selectProject(id: string, project: Project) {
+        this.searchProject = project.projectName;
+        this.selectedProject = project;
+        this.getProjectByName(this.searchProject);
+        this.closeModal(id);
+    };
+    
+    getProjectList(projectName: string): void {
+        this.projectService.getProjects()
+            .subscribe(data => {
+                this.projects = data;
+                this.projects.forEach((t, i) => {
+                    if (t.projectName === projectName) {
+                        this.projects = this.projects.filter(u => u == t);
+                    }
+                });
+            });
+    };
+    
+    editTask(task: Task): void {
+        this.editTaskService.task = task;
+        this.editTaskService.project = this.selectedProject;
+        this.router.navigate(['addTasks']);
+    };
 
 }

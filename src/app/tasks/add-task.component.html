@@ -15,7 +15,7 @@
 				</div>
 				<div class="col-md-2">
 					<br>
-					<button class="btn btn-primary"
+					<button class="btn btn-primary" [disabled]="isDisabledOnEdit"
 						(click)="openModal('project-modal')">Search Project</button>
 				</div>
 			</div>
@@ -26,7 +26,7 @@
 					id="taskName">
 			</div>
 			<div class="form-group">
-				<input [(ngModel)]="parentTaskCheckbox" name="parentTaskCheckboxId" (change)="toggleDisableForParentTask()"
+				<input [(ngModel)]="parentTaskCheckbox" name="parentTaskCheckboxId" (change)="toggleDisableForParentTask()" [disabled]="isDisabledOnEdit"
 					type="checkbox" id="parentTaskCheckboxId"/> <label for="parentTaskCheckboxId"
 					class="margin-left-20">Parent Task</label>
 			</div>
