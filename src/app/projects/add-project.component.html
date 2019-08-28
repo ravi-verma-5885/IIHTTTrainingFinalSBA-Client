@@ -3,12 +3,17 @@
 	<div class="col-md-6">
 		<h3>Add Project</h3>
 		<br>
-		<form role="form">
+		<form role="form" #projectForm="ngForm">
 			<div class="form-group">
 				<label for="firstName">Project:</label> <input
-					[(ngModel)]="project.projectName" placeholder="Project Name"
+					[(ngModel)]="project.projectName" placeholder="Project Name" #projectName="ngModel"
 					name="projectName" required="required" class="form-control"
 					id="projectName">
+					<div *ngIf="projectName.errors && (projectName.dirty || projectName.touched)" class="alert alert-danger">
+				       <div [hidden]="!projectName.errors.required">
+				         Project Name is required!
+				       </div>
+				     </div>
 			</div>
 			<div class="form-group">
 
@@ -17,7 +22,7 @@
 					(change)="triggerSomeEvent()" /> <label for="setStartEndDateId"
 					class="margin-left-20">Set Start and End Date</label> <label
 					for="setStartEndDateId" class="margin-left-20">Start</label> <input
-					type='date' [disabled]="isDisabled" name="startDate"
+					type='date' [disabled]="isDisabled" name="startDate" 
 					class="margin-left-20" #myDate [(ngModel)]="project.startDate" /> <label
 					for="setStartEndDateId" class="margin-left-20">End Date</label> <input
 					type='date' [disabled]="isDisabled" name="endDate"
@@ -26,12 +31,45 @@
 			</div>
 
 			<div class="form-group">
-				<label for="lastName">Priority:</label> <input type="range"
+				<label for="lastName">Priority:</label> <input type="range" 
 					[(ngModel)]="project.priority" min="0" max="30" name="priority"
 					class="form-control" id="priority">
 			</div>
 
-			<jw-modal id="custom-modal-1">
+			<div class="form-group row">
+				<div class="col-md-10">
+					<label for="firstName">Manager:</label> <input
+						[(ngModel)]="userFirstName" [disabled]="true"
+						placeholder="Manager Name" name="userFirstName"
+						required="required" class="form-control" id="userFirstName">
+					<input [(ngModel)]="project.user" name="projectUser"
+						required="required" class="form-control hidden" id="projectUser">
+				</div>
+				<div class="col-md-2">
+					<br>
+					<button class="btn btn-primary"
+						(click)="openModal('custom-modal-1')">Search</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<input [(ngModel)]="project.projectId" name="projectId"
+					class="form-control hidden" id="projectId">
+
+				<button class="btn btn-success" *ngIf="!project.projectId" [disabled]="!projectForm.form.valid"
+					id="addProjectBtnId" (click)="createProject(); projectForm.reset()">Add Project</button>
+
+				<button class="btn btn-success" *ngIf="project.projectId"
+					id="updateProjectBtnId" (click)="updateProject(project); projectForm.reset()">Update
+					Project</button>
+
+				<input type="reset" class="btn btn-info margin-left-20"
+					value="Reset" />
+
+			</div>
+		</form>
+		
+		<jw-modal id="custom-modal-1">
 			<div class="row form-group">
 				<div class="col-md-12">
 					<h3>Select Manager</h3>
@@ -82,39 +120,6 @@
 					(click)="closeModal('custom-modal-1');">Close</button>
 			</div>
 			</jw-modal>
-
-			<div class="form-group row">
-				<div class="col-md-10">
-					<label for="firstName">Manager:</label> <input
-						[(ngModel)]="userFirstName" [disabled]="true"
-						placeholder="Manager Name" name="userFirstName"
-						required="required" class="form-control" id="userFirstName">
-					<input [(ngModel)]="project.user" name="projectUser"
-						required="required" class="form-control hidden" id="projectUser">
-				</div>
-				<div class="col-md-2">
-					<br>
-					<button class="btn btn-primary"
-						(click)="openModal('custom-modal-1')">Search</button>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<input [(ngModel)]="project.projectId" name="projectId"
-					required="required" class="form-control hidden" id="projectId">
-
-				<button class="btn btn-success" *ngIf="!project.projectId"
-					id="addProjectBtnId" (click)="createProject()">Add Project</button>
-
-				<button class="btn btn-success" *ngIf="project.projectId"
-					id="updateProjectBtnId" (click)="updateProject(project)">Update
-					Project</button>
-
-				<input type="reset" class="btn btn-info margin-left-20"
-					value="Reset" />
-
-			</div>
-		</form>
 	</div>
 	<div class="col-md-3"></div>
 </div>

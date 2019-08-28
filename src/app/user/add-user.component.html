@@ -3,36 +3,49 @@
 	<div class="col-md-6">
 		<h3>Add User</h3>
 		<br>
-		<form role="form">
+		<form role="form" #userForm="ngForm">
 			<div class="form-group">
 				<label for="firstName">First Name:</label> <input
 					[(ngModel)]="user.firstName" placeholder="First Name"
-					name="firstName" required="required" class="form-control"
+					name="firstName" required="required" class="form-control" #firstName="ngModel"
 					id="firstName">
+					<div *ngIf="firstName.errors && (firstName.dirty || firstName.touched)" class="alert alert-danger">
+				       <div [hidden]="!firstName.errors.required">
+				         First Name is required!
+				       </div>
+				     </div>
 			</div>
 			<div class="form-group">
 				<label for="lastName">Last Name:</label> <input
-					[(ngModel)]="user.lastName" placeholder="Last name" name="lastName"
+					[(ngModel)]="user.lastName" placeholder="Last name" name="lastName" #lastName="ngModel"
 					required="required" class="form-control" id="lastName">
+					<div *ngIf="lastName.errors && (lastName.dirty || lastName.touched)" class="alert alert-danger">
+				       <div [hidden]="!lastName.errors.required">
+				         Last Name is required!
+				       </div>
+				     </div>
 			</div>
 
 			<div class="form-group">
 				<label for="lastName">Employee Id:</label> <input
 					[(ngModel)]="user.employeeId" placeholder="Employee Id"
-					name="employeeId" required="required" class="form-control"
+					name="employeeId" required="required" class="form-control" #employeeId="ngModel"
 					id="employeeId">
+					<div *ngIf="employeeId.errors && (employeeId.dirty || employeeId.touched)" class="alert alert-danger">
+				       <div [hidden]="!employeeId.errors.required">
+				         Employee Id is required!
+				       </div>
+				     </div>
 			</div>
-
-			<input [(ngModel)]="user.userId" name="userId" required="required"
+			<input [(ngModel)]="user.userId" name="userId"
 				class="form-control hidden" id="userId">
-
-			<button class="btn btn-success" *ngIf="!user.userId"
-				id="addUserBtnId" (click)="createUser()">Add User</button>
+			<button class="btn btn-success" type="submit" *ngIf="!user.userId" [disabled]="!userForm.form.valid"
+				id="addUserBtnId" (click)="createUser(); userForm.reset()">Add User</button>
 
 			<button class="btn btn-success" *ngIf="user.userId"
-				id="updateUserBtnId" (click)="updateUser(user)">Update User</button>
+				id="updateUserBtnId" (click)="updateUser(user); userForm.reset()">Update User</button>
 
-			<input type="reset" class="btn btn-info margin-left-20" value="Reset" />
+			<input type="reset" class="btn btn-info margin-left-20" value="Reset"/>
 		</form>
 	</div>
 	<div class="col-md-3"></div>

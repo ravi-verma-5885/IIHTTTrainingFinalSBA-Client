@@ -3,7 +3,7 @@
 	<div class="col-md-6">
 		<h3>Add Task</h3>
 		<br>
-		<form role="form">
+		<form role="form" #taskForm="ngForm">
 			<div class="form-group row">
 				<div class="col-md-10">
 					<label for="projectName">Project:</label> <input
@@ -21,9 +21,14 @@
 			</div>
 			<div class="form-group">
 				<label for="taskName">Task:</label> <input
-					[(ngModel)]="task.taskName" placeholder="Task Description"
+					[(ngModel)]="task.taskName" placeholder="Task Description" #taskName="ngModel"
 					name="taskName" required="required" class="form-control"
 					id="taskName">
+				<div *ngIf="taskName.errors && (taskName.dirty || taskName.touched)" class="alert alert-danger">
+			       <div [hidden]="!taskName.errors.required">
+			         Task Name is required!
+			       </div>
+			     </div>
 			</div>
 			<div class="form-group">
 				<input [(ngModel)]="parentTaskCheckbox" name="parentTaskCheckboxId" (change)="toggleDisableForParentTask()" [disabled]="isDisabledOnEdit"
@@ -40,9 +45,9 @@
 					<label for="parentTaskName">Parent Task:</label> <input
 						[(ngModel)]="selParentTaskName" [disabled]="true"
 						placeholder="Parent Task Description" name="selParentTaskName"
-						required="required" class="form-control" id="selParentTaskName">
+						class="form-control" id="selParentTaskName">
 					<input [(ngModel)]="task.project" name="taskProject"
-						required="required" class="form-control hidden" id="taskProject">
+						class="form-control hidden" id="taskProject">
 				</div>
 				<div class="col-md-2">
 					<br>
@@ -67,9 +72,9 @@
 					<label for="firstName">User:</label> <input
 						[(ngModel)]="userFirstName" [disabled]="true"
 						placeholder="User Name" name="userFirstName"
-						required="required" class="form-control" id="userFirstName">
+						class="form-control" id="userFirstName">
 					<input [(ngModel)]="task.user" name="taskUser"
-						required="required" class="form-control hidden" id="taskUser">
+						class="form-control hidden" id="taskUser">
 				</div>
 				<div class="col-md-2">
 					<br>
@@ -78,14 +83,14 @@
 				</div>
 			</div>
 
-			<input [(ngModel)]="task.taskId" name="taskId" required="required"
+			<input [(ngModel)]="task.taskId" name="taskId"
 				class="form-control hidden" id="taskId">
 
-			<button class="btn btn-success" *ngIf="!task.taskId"
-				id="addTaskBtnId" (click)="createTask()">Add Task</button>
+			<button class="btn btn-success" *ngIf="!task.taskId" [disabled]="!taskForm.form.valid"
+				id="addTaskBtnId" (click)="createTask(); taskForm.reset()">Add Task</button>
 
 			<button class="btn btn-success" *ngIf="task.taskId"
-				id="updateTaskBtnId" (click)="updateTask(task)">Update Task</button>
+				id="updateTaskBtnId" (click)="updateTask(task); taskForm.reset()">Update Task</button>
 
 			<input type="reset" class="btn btn-info margin-left-20" value="Reset" (click)="callReset()"/>
 		</form>
