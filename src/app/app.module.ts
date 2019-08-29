@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule} from '@angular/forms';
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing.module';
@@ -31,7 +32,8 @@ import {ViewTaskComponent} from './tasks/view-task.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ModalModule
+    ModalModule,
+    NgbModule
   ],
   providers: [UserService, ProjectService, TaskService, ParentTaskService, EditTaskService],
   bootstrap: [AppComponent]
