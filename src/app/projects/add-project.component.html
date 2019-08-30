@@ -27,7 +27,10 @@
 					for="setStartEndDateId" class="margin-left-20">End Date</label> <input
 					type='date' [disabled]="isDisabled" name="endDate"
 					class="margin-left-20" #myDate [(ngModel)]="project.endDate" />
-
+					
+				<div *ngIf="showErrEndDateBeforeStartDate" class="alert alert-danger">
+			         End date must be after start date!
+			     </div>
 			</div>
 
 			<div class="form-group">
@@ -57,14 +60,14 @@
 					class="form-control hidden" id="projectId">
 
 				<button class="btn btn-success" *ngIf="!project.projectId" [disabled]="!projectForm.form.valid"
-					id="addProjectBtnId" (click)="createProject(); projectForm.reset()">Add Project</button>
+					id="addProjectBtnId" (click)="createProject(); projectForm.reset(); callReset()">Add Project</button>
 
 				<button class="btn btn-success" *ngIf="project.projectId"
-					id="updateProjectBtnId" (click)="updateProject(project); projectForm.reset()">Update
+					id="updateProjectBtnId" (click)="updateProject(project); projectForm.reset(); callReset()">Update
 					Project</button>
 
 				<input type="reset" class="btn btn-info margin-left-20"
-					value="Reset" />
+					value="Reset" (click)="callReset(); hideErrorMsg()"/>
 
 			</div>
 		</form>
@@ -176,7 +179,7 @@
 										<strong>No of Tasks</strong> {{project.tasks.length}}
 									</div>
 									<div>
-										<strong>Start Date</strong> {{project.startDate}}
+										<strong>Start Date</strong> {{project.startDate | date : "MM/dd/yyyy" }}
 									</div>
 								</div>
 								<div class="col-sm-6">
@@ -184,7 +187,7 @@
 										<strong>Completed </strong>{{project.completed}}
 									</div>
 									<div>
-										<strong>End Date </strong>{{project.endDate}}
+										<strong>End Date </strong>{{project.endDate | date : "MM/dd/yyyy" }}
 									</div>
 								</div>
 							</div>

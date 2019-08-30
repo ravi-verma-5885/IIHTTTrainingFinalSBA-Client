@@ -19,15 +19,23 @@ export class AddProjectComponent implements OnInit {
     constructor(private router: Router, private projectService: ProjectService, private modalService: ModalService, private userService: UserService) {
 
     }
-
+    showErrEndDateBeforeStartDate = false;
     isDisabled = true;
     triggerSomeEvent() {
+        if(this.isDisabled){
+            this.project.startDate = new Date().toISOString().split('T')[0];
+            this.project.endDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+        } else {
+            this.project.startDate = null;
+            this.project.endDate = null;
+        }
         this.isDisabled = !this.isDisabled;
         return;
     }
 
     users: User[];
     projects: Project[];
+    
     ngOnInit() {
         this.projectService.getProjects()
             .subscribe(data => {
@@ -36,22 +44,38 @@ export class AddProjectComponent implements OnInit {
                     this.projects[i].completed = this.checkEndDateIsPast(t.endDate);
                 });
             });
-        //this.project.startDate = new Date().toISOString().split('T')[0];
     };
 
     project: Project = new Project();
     createProject(): void {
-        this.projectService.createProject(this.project)
-            .subscribe(data => {
-                this.projects = this.projects.concat(data);
-                this.projects.forEach((t, i) => {
-                    this.projects[i].completed = this.checkEndDateIsPast(t.endDate);
+        
+        if(!this.processDateToShowError()) {
+            this.projectService.createProject(this.project)
+                .subscribe(data => {
+                    this.projects = this.projects.concat(data);
+                    this.projects.forEach((t, i) => {
+                        this.projects[i].completed = this.checkEndDateIsPast(t.endDate);
+                    });
+                    this.project = new Project();
+                    this.userFirstName = null;
                 });
-                this.project = new Project();
-                this.userFirstName = null;
-            });
-
+        }
     };
+    
+    processDateToShowError(){
+        if(!this.isDisabled){
+            if(this.checkEndDateIsBeforeStartDate(this.project.startDate, this.project.endDate)){
+                this.showErrEndDateBeforeStartDate = true;
+                return true;
+            } else {
+                this.showErrEndDateBeforeStartDate = false;
+                return false;
+            }
+        } else {
+            this.showErrEndDateBeforeStartDate = false;
+            return false;
+        }
+    }
 
     deleteProject(project: Project): void {
         this.projectService.deleteProject(project)
@@ -70,18 +94,20 @@ export class AddProjectComponent implements OnInit {
     };
 
     updateProject(project: Project): void {
-        this.projectService.updateProject(project)
-            .subscribe(data => {
-                this.projects.forEach((t, i) => {
-                    if (t.projectId === data.projectId) {
-                        this.projects[i] = data;
-                        this.projects[i].completed = this.checkEndDateIsPast(data.endDate);
-                    }
-                });
-
-                this.project = new Project();
-                this.userFirstName = null;
-            })
+        if(!this.processDateToShowError()) {
+            this.projectService.updateProject(project)
+                .subscribe(data => {
+                    this.projects.forEach((t, i) => {
+                        if (t.projectId === data.projectId) {
+                            this.projects[i] = data;
+                            this.projects[i].completed = this.checkEndDateIsPast(data.endDate);
+                        }
+                    });
+    
+                    this.project = new Project();
+                    this.userFirstName = null;
+                })
+        }
     };
 
     getProjectByName(projectName: string): void {
@@ -152,4 +178,21 @@ export class AddProjectComponent implements OnInit {
             return 'No';
         }
     };
+    
+    checkEndDateIsBeforeStartDate(startDateVal: string, endDateVal: string) {
+        if (Date.parse(endDateVal) < Date.parse(startDateVal)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    
+    callReset() {
+        this.isDisabled = false;
+        this.triggerSomeEvent();
+    }
+    
+    hideErrorMsg(){
+        this.showErrEndDateBeforeStartDate = false;
+    }
 }

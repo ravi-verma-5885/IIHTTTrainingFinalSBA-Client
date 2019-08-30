@@ -28,7 +28,7 @@ export class AddTaskComponent implements OnInit {
         private editTaskService: EditTaskService) {
 
     }
-
+    showErrEndDateBeforeStartDate = false;
     users: User[];
     projects: Project[];
     tasks: Task[];
@@ -49,6 +49,8 @@ export class AddTaskComponent implements OnInit {
             this.selProjectName = this.editTaskService.project.projectName;
             this.task.project = this.editTaskService.project;
             this.isDisabledOnEdit = true;
+        } else {
+            this.setDefaultDate();
         }
     };
     
@@ -63,28 +65,35 @@ export class AddTaskComponent implements OnInit {
                 .subscribe(data => {
                     this.clearForm();
                     alert('Parent Task created successfully.');
+                    this.toggleDisableForParentTask();
                 });
         } else {
-            this.task.status = "New";
-            this.taskService.createTask(this.task)
-                .subscribe(data => {
-                    this.clearForm();
-                    alert('Task created successfully.');
-                });
+            if(!this.processDateToShowError()) {
+                this.task.status = "New";
+                this.taskService.createTask(this.task)
+                    .subscribe(data => {
+                        this.clearForm();
+                        alert('Task created successfully.');
+                        this.setDefaultDate();
+                    });
+            }
          }
     };
     
     updateTask(task: Task): void {
-        this.taskService.createTask(task)
-            .subscribe(data => {
-                this.clearForm();
-                this.task = new Task();
-                this.selProjectName = null;
-                this.selParentTaskName = null;
-                this.userFirstName = null;
-                this.isDisabledOnEdit = false;
-                alert('Task updated successfully.');
-            });
+        if(!this.processDateToShowError()) {
+            this.taskService.createTask(task)
+                .subscribe(data => {
+                    this.clearForm();
+                    this.task = new Task();
+                    this.selProjectName = null;
+                    this.selParentTaskName = null;
+                    this.userFirstName = null;
+                    this.isDisabledOnEdit = false;
+                    alert('Task updated successfully.');
+                      this.setDefaultDate();
+                });
+         }
     };
     
     clearForm() {
@@ -172,6 +181,13 @@ export class AddTaskComponent implements OnInit {
     
     isDisabledForParentTask = false;
     toggleDisableForParentTask() {
+        if (this.isDisabledForParentTask){
+            this.setDefaultDate();
+        } else {
+            this.task.startDate = null;
+            this.task.endDate = null;
+        }
+        
         this.isDisabledForParentTask = !this.isDisabledForParentTask;
         return;
     }
@@ -179,6 +195,33 @@ export class AddTaskComponent implements OnInit {
     callReset() {
         if (this.parentTaskCheckbox){
             this.toggleDisableForParentTask();
+        }
+    }
+    
+    setDefaultDate() {
+        this.task.startDate = new Date().toISOString().split('T')[0];
+        this.task.endDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+    }
+    
+    hideErrorMsg(){
+        this.showErrEndDateBeforeStartDate = false;
+    }
+    
+    checkEndDateIsBeforeStartDate(startDateVal: string, endDateVal: string) {
+        if (Date.parse(endDateVal) < Date.parse(startDateVal)) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+    
+    processDateToShowError(){
+        if(this.checkEndDateIsBeforeStartDate(this.task.startDate, this.task.endDate)){
+            this.showErrEndDateBeforeStartDate = true;
+            return true;
+        } else {
+            this.showErrEndDateBeforeStartDate = false;
+            return false;
         }
     }
 }
